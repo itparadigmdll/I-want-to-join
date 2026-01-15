@@ -1,6 +1,6 @@
 # Credits to codetrybe for this invitation copy
 
-name: Join to DLL IT Paradigm
+name: Join to DLL IT Paradigm Programming Team
 
 description: Becoming a part of DLL IT Paradigm
 
@@ -10,7 +10,7 @@ labels: [Join Request, Programmer]
 
 body:
   - type: input
-    id: programmer-name
+    id: name
     attributes:
       label: Name
       description: Enter your name here
@@ -25,7 +25,7 @@ body:
         Programming Team
 
   - type: textarea
-    id: Programmer-additional-context
+    id: additional-context
     attributes:
       label: Tell us more about yourself
       description: Why you would like to join IT Paradigm. For example, you could mention any relevant experience you have, what programming languages or technologies you are interested in, or what you hope to gain by being a member of the community.
