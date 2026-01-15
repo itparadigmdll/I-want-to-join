@@ -1,0 +1,32 @@
+# Credits to codetrybe for this invitation copy
+
+name: Join to DLL IT Paradigm
+
+description: Becoming a part of DLL IT Paradigm
+
+title: "I Want to Join to DLL IT Paradigm"
+
+labels: [Join Request, Documentation]
+
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: Enter your name here
+      placeholder: e.g Juan Dela Cruz
+    validations:
+      required: true
+  
+  - type: Markdown
+    attributes:
+      value: Documentation
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Tell us more about yourself
+      description: Why you would like to join IT Paradigm. For example, you could mention any relevant experience you have, what programming languages or technologies you are interested in, or what you hope to gain by being a member of the community.
+    validations:
+      required: true
+      

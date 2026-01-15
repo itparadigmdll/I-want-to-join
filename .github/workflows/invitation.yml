@@ -1,6 +1,6 @@
 on:
   issues:
-    types: [labeled]
+    types: [labeled, opened]
 
 jobs:
   automate_invite:
