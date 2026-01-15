@@ -27,7 +27,8 @@ body:
         - Security Analysts
         - Creatives
         - Documentation
-    required: true
+    validations:
+      required: true
 
   - type: textarea
     id: additional-context
