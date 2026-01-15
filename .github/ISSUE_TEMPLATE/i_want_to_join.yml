@@ -19,7 +19,7 @@ body:
     validations:
       required: true
 
-  - type: radio
+  - type: dropdown
     id: role
     attributes:
       label: Role you want to apply for?
