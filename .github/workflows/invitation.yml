@@ -1,12 +1,14 @@
+name: Invite on Label
+
 on:
   issues:
-    types: [labeled, opened]
+    types: [labeled]
 
 jobs:
   automate_invite:
     runs-on: ubuntu-latest
     steps:
-      - name: Invite on Label
+      - name: Join Request
         uses: vj-abigo/invite-on-label@v1.2
         with:
           organization: itparadigmdll
