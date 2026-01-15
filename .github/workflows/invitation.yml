@@ -2,7 +2,7 @@ name: Invite on Label
 
 on:
   issues:
-    types: [closed]
+    types: [labeled]
 
 jobs:
   automate_invite:
@@ -17,7 +17,7 @@ jobs:
           organization: itparadigmdll
           label: Join Request
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          comment: "<b>Invitation from DLL IT Paradigm</b><br>Thank you for joining with us, please make this community healthy that share, care, and inspire one another. This is an automated invitation, so please <a href='https://github.com/orgs/itparadigmdll/invitation'><b><i>ACCEPT</i></b></a> as one you have it.<br><b>- From the organization's administrators</b>"
+          comment: "<b>Invitation from DLL IT Paradigm</b><br>Thank you for joining with us, please make this community healthy that share, care, and inspire one another. This is an automated invitation, so please <a href='https://github.com/orgs/itparadigmdll/invitation'><b><i>ACCEPT</i></b></a> as one you have it.<b> Don't forget to comment \"DONE\" in this issue so that we may add you to your team.<br>- From the organization's administrators</b>"
 
         env:
           INVITE_TOKEN: ${{ secrets.INVITE_TOKEN }}
