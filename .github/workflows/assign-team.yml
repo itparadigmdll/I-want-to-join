@@ -21,14 +21,14 @@ jobs:
             const username = context.payload.issue.user.login;
             const message = context.payload.comment.body;
 
-            if(context.payload.comment.user.login !== username){
+            if(context.payload.comment.user.login !== username && !message.toLowerCase().includes("done")){
               return
             }
 
             // Map labels to team mentions
             const teamMap = {
               "Programmer": "programming-team",
-              "Security Analyst": "cyber-security-team",
+              "Security Analysts": "cyber-security-team",
               "Creatives": "creatives",
               "Documentation": "documentation-team"
             };
