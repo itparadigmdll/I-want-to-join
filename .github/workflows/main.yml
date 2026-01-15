@@ -1,0 +1,126 @@
+name: Join Request Automation
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  handle-join-request:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      organization: write  # needed to invite users
+
+    steps:
+      - name: Handle Join Request
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = context.payload.issue.number;
+            const username = context.payload.issue.user.login;
+            const org = "itparadigmdll";
+
+            // Check which label was added
+            const addedLabel = context.payload.label?.name;
+            if (addedLabel !== "Join Request") {
+              console.log("Not a Join Request label. Exiting.");
+              return;
+            }
+
+            // Check if we already processed this issue
+            const labels = context.payload.issue.labels.map(l => l.name);
+            if (labels.includes("Invitation Sent") || labels.includes("Member Accepted")) {
+              console.log("Invitation already handled. Exiting.");
+              return;
+            }
+
+            // Map role labels to teams
+            const teamMap = {
+              "Programmer": "itparadigmdll/programming-team",
+              "Security Analyst": "itparadigmdll/cyber-security-team",
+              "Creatives": "itparadigmdll/creatives",
+              "Documentation": "itparadigmdll/documentation-team"
+            };
+
+            // Determine team based on issue labels
+            let userTeam = null;
+            for (const label of labels) {
+              if (teamMap[label]) {
+                userTeam = teamMap[label];
+                break;
+              }
+            }
+
+            // Check if user is already a member
+            let isMember = true;
+            try {
+              await github.rest.orgs.getMembershipForUser({
+                org,
+                username
+              });
+              console.log(`${username} is already a member.`);
+            } catch (err) {
+              if (err.status === 404) {
+                isMember = false;
+                console.log(`${username} is NOT a member. Sending invite...`);
+
+                // Send invitation
+                await github.rest.orgs.createInvitation({
+                  org,
+                  invitee_id: context.payload.issue.user.id
+                });
+
+                // Add label "Invitation Sent"
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issueNumber,
+                  labels: ["Invitation Sent"]
+                });
+
+                // Comment inviting user
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issueNumber,
+                  body: `Hi @${username}, an invitation to join **${org}** has been sent. Please accept the invite here: [Invitation Link](https://github.com/orgs/${org}/invitation).`
+                });
+              } else {
+                throw err;
+              }
+            }
+
+            // If user is already a member or after accepting later
+            if (isMember && userTeam) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body: `✅ @${username} is now a member and tagged to team **${userTeam.split("/")[1]}**.`
+              });
+
+              // Add label "Member Accepted"
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                labels: ["Member Accepted"]
+              });
+
+              // Optionally remove "Invitation Sent" label
+              if (labels.includes("Invitation Sent")) {
+                await github.rest.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issueNumber,
+                  name: "Invitation Sent"
+                });
+              }
+            }
+            
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              state: "closed"
+            });

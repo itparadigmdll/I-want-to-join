@@ -2,7 +2,7 @@ name: Invite on Label
 
 on:
   issues:
-    types: [labeled]
+    types: [closed]
 
 jobs:
   automate_invite:
