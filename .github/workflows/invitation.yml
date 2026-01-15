@@ -12,7 +12,7 @@ jobs:
         uses: vj-abigo/invite-on-label@v1.2
         with:
           organization: itparadigmdll
-          label: I Want to Join to DLL IT Paradigm
+          label: Join Request
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           comment: "<b>Invitation from DLL IT Paradigm</b><br>Thank you for joining with us, please make this community healthy that share, care, and inspire one another. This is an automated invitation, so please accept as one you have it.<br><b>- From the organization's adminitators</b>"
 
