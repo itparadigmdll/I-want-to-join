@@ -6,7 +6,8 @@ description: Becoming a part of DLL IT Paradigm
 
 title: "I Want to Join to DLL IT Paradigm"
 
-labels: [Join as Programmer, Join as Security Analysts]
+labels: 
+  - "Join Request"
 
 body:
   - type: input
@@ -17,6 +18,18 @@ body:
       placeholder: e.g Juan Dela Cruz
     validations:
       required: true
+
+  - type: radio
+    id: role
+    attributes:
+      label: Role you want to apply for?
+      description: Select a role that fits to you.
+      options:
+        - Programmer
+        - Security Analysts
+        - Creatives
+        - Documentation
+    required: true
 
   - type: textarea
     id: additional-context
