@@ -10,7 +10,7 @@ labels: [Join Request, Security Analysts]
 
 body:
   - type: input
-    id: name
+    id: cybersecurity-name
     attributes:
       label: Name
       description: Enter your name here
@@ -20,10 +20,12 @@ body:
   
   - type: markdown
     attributes:
-      value: Cyber Security
+      value: |
+        ### Role
+        Cyber Security Team
 
   - type: textarea
-    id: additional-context
+    id: cybersecurity-additional-context
     attributes:
       label: Tell us more about yourself
       description: Why you would like to join IT Paradigm. For example, you could mention any relevant experience you have, what programming languages or technologies you are interested in, or what you hope to gain by being a member of the community.
