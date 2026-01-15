@@ -2,7 +2,7 @@ name: Assign Team Based on Label
 
 on:
   issues:
-    types: [opened]
+    types: [closed]
 
 jobs:
   assign-team:
