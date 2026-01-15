@@ -7,20 +7,10 @@ on:
 jobs:
   automate_invite:
     runs-on: ubuntu-latest
-
+    permissions:
+      issues: write
+  
     steps:
- 
-      - name: Commenting to user
-        uses: actions/github-script@v7
-        script: |
-          const issueNumber = context.payload.issue.number;
-          await github.rest.issues.createComment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: issueNumber,
-            body: "<b>Invitation from DLL IT Paradigm</b><br>Thank you for joining with us, please make this community healthy that share, care, and inspire one another. This is an automated invitation, so please <a href='https://github.com/orgs/itparadigmdll/invitation'><b<i>ACCEPT</i></b></a> as one you have it.<br><b>- From the organization's administrators</b>"
-          });
-
       - name: Join Request
         uses: vj-abigo/invite-on-label@v1.2
         with:
