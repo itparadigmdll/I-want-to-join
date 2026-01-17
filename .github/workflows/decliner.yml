@@ -2,7 +2,7 @@ name: Prevent Multiple Join Issues
 
 on:
   issues:
-    types: [opened]
+    types: [labeled]
 
 jobs:
   prevent-duplicate:
