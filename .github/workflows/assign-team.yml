@@ -11,6 +11,51 @@ jobs:
       issues: write
 
     steps:
+      - name: Issue Checker
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.INVITE_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issue = context.payload.issue;
+            const author = issue.user.login;
+
+            const { data } = await github.rest.search.issuesAndPullRequests({
+              q: `repo:${owner}/${repo} is:issue is:open author:${author}`
+            });
+
+            const otherIssues = data.items.filter(i => i.number !== issue.number);
+
+            if (otherIssues.length > 0) {
+              const message =
+                "⚠️ **Duplicate Join Request Detected**\n\n" +
+                "You already have an open join request:\n" +
+                `- #${otherIssues[0].number}\n\n` +
+                "Please wait for it to be processed before creating another issue.";
+
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: issue.number,
+                body: message
+              });
+
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: issue.number,
+                state: "closed"
+              });
+
+              await github.rest.issues.lock({
+                owner,
+                repo,
+                issue_number: issue.number,
+                lock_reason: "spam"
+              });
+            }
+       
       - name: Assign team based on label
         uses: actions/github-script@v7
         with:
