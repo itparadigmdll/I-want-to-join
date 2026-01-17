@@ -66,6 +66,8 @@ jobs:
         with:
           github-token: ${{ secrets.INVITE_TOKEN }}
           script: |
+            await setTimeout(() => {}, 5000)
+            
             const issueNumber = context.payload.issue.number;
             const labels = context.payload.issue.labels.map(l => l.name);
             const username = context.payload.issue.user.login;
