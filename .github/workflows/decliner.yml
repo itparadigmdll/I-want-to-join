@@ -1,3 +1,4 @@
+
 name: Prevent Multiple Join Issues
 
 on:
@@ -21,25 +22,24 @@ jobs:
             const issue = context.payload.issue;
             const author = issue.user.login;
 
-            // Search for open issues by same author
             const { data } = await github.rest.search.issuesAndPullRequests({
               q: `repo:${owner}/${repo} is:issue is:open author:${author}`
             });
 
-            // Exclude the current issue
             const otherIssues = data.items.filter(i => i.number !== issue.number);
 
             if (otherIssues.length > 0) {
+              const message =
+                "⚠️ **Duplicate Join Request Detected**\n\n" +
+                "You already have an open join request:\n" +
+                `- #${otherIssues[0].number}\n\n` +
+                "Please wait for it to be processed before creating another issue.";
+
               await github.rest.issues.createComment({
                 owner,
                 repo,
                 issue_number: issue.number,
-                body: `⚠️ **Duplicate Join Request Detected**
-
-You already have an open join request:
-- #${otherIssues[0].number}
-
-Please wait for it to be processed before creating another issue.`
+                body: message
               });
 
               await github.rest.issues.update({
@@ -48,6 +48,7 @@ Please wait for it to be processed before creating another issue.`
                 issue_number: issue.number,
                 state: "closed"
               });
+
               await github.rest.issues.lock({
                 owner,
                 repo,
@@ -55,3 +56,4 @@ Please wait for it to be processed before creating another issue.`
                 lock_reason: "spam"
               });
             }
+
