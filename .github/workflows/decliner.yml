@@ -1,0 +1,57 @@
+name: Prevent Multiple Join Issues
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  prevent-duplicate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check for existing open issues by author
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issue = context.payload.issue;
+            const author = issue.user.login;
+
+            // Search for open issues by same author
+            const { data } = await github.rest.search.issuesAndPullRequests({
+              q: `repo:${owner}/${repo} is:issue is:open author:${author}`
+            });
+
+            // Exclude the current issue
+            const otherIssues = data.items.filter(i => i.number !== issue.number);
+
+            if (otherIssues.length > 0) {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: issue.number,
+                body: `⚠️ **Duplicate Join Request Detected**
+
+You already have an open join request:
+- #${otherIssues[0].number}
+
+Please wait for it to be processed before creating another issue.`
+              });
+
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: issue.number,
+                state: "closed"
+              });
+              await github.rest.issues.lock({
+                owner,
+                repo,
+                issue_number: issue.number,
+                lock_reason: "spam"
+              });
+            }
