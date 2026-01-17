@@ -22,7 +22,7 @@ jobs:
             const message = context.payload.comment.body;
             const isLocked = context.payload.issue.locked;
 
-            if(context.payload.comment.user.login !== username && isLocked && !message.toLowerCase().includes("done")){
+            if(context.payload.comment.user.login !== username || isLocked || !message.toLowerCase().includes("done")){
               return
             }
 
