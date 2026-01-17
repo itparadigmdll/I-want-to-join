@@ -80,7 +80,7 @@ jobs:
 
             const otherIssues = data.items.filter(i => i.number !== issue.number);
 
-            if(otherIssues.length > 0 || context.payload.comment.user.login !== username || isLocked || !message.toLowerCase().includes("done")){
+            if((otherIssues.length > 0 && otherIssues[0] !== issueNumber) || context.payload.comment.user.login !== username || isLocked || !message.toLowerCase().includes("done")){
               return
             }
 
