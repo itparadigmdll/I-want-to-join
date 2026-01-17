@@ -73,8 +73,14 @@ jobs:
             const username = context.payload.issue.user.login;
             const message = context.payload.comment.body;
             const isLocked = context.payload.issue.locked;
+            
+            const { data } = await github.rest.search.issuesAndPullRequests({
+              q: `repo:${owner}/${repo} is:issue is:closed author:${author}`
+            });
 
-            if(context.payload.comment.user.login !== username || isLocked || !message.toLowerCase().includes("done")){
+            const otherIssues = data.items.filter(i => i.number !== issue.number);
+
+            if(otherIssues.length > 0 || context.payload.comment.user.login !== username || isLocked || !message.toLowerCase().includes("done")){
               return
             }
 
